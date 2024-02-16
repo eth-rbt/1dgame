@@ -11,18 +11,39 @@ class Display {
       this.pixelSize = _pixelSize;
       this.initColor = color(0, 0, 0);      // black color
       this.displayBuffer = [];
+      
+      this.colorDict={
+        0: color(0, 255, 0),     // Green
+        1: color(255, 0, 0),     // Red        
+        2: color(0, 0, 255),     // Blue
+        3: color(255, 255, 0),   // Yellow
+        4: color(128,0,128),  //Purp
+        5: color(255,165,0),  //orange
+        6: color(255, 192, 203),  //pink
+        7: color(165, 42, 42),  //brown
+        8: color(0, 255, 255),  //cyan
+        9: color(255, 0, 255),  //magenta
+        // Add more color mappings as needed
+      };
 
       // Assign black to all pixels. Black = off
-      for(let i = 0; i < this.displaySize; i++){
+      for(let i = 0; i < 5; i++){
+        this.displayBuffer[i] = this.initColor;
+      }
+      for(let i = 10; i < 15; i++){
         this.displayBuffer[i] = this.initColor;
       }
   
     }
   
      // Color a specific pixel in the buffer
-    setPixel(  _index,  _color) {
-        this.displayBuffer[_index]  = _color;
+    setPixeld(  _index, _colorindex) {
+        this.displayBuffer[_index]  = this.colorDict[_colorindex];
     }
+
+    setPixel(  _index, _colorindex) {
+      this.displayBuffer[_index]  = _colorindex;
+   }
   
 
     // Color all pixels in the buffer

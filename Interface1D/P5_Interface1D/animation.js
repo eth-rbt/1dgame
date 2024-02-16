@@ -6,7 +6,7 @@ class Animation {
     constructor() {
  
         this.numberOfFrames = 30;    // how many frames the animation has 
-        this.pixels = 30;            // how wide the animation is
+        this.pixels = 15;            // how wide the animation is
         
         // Multidimensional arrays in javascript are a bit silly
         // I recommend you watch this to understand what is happening next: https://www.youtube.com/watch?v=OTNpiLUSiB4

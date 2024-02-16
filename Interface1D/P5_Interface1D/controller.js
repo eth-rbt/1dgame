@@ -5,8 +5,11 @@
 class Controller {
 
     // This is the state we start with.
+
+
     constructor() {
-        this.gameState = "PLAY";
+        this.gameState = "play";
+        this.flag=true;
        
     }
     
@@ -19,36 +22,45 @@ class Controller {
         switch(this.gameState) {
 
             // This is the main game state, where the playing actually happens
-            case "PLAY":
+            case "play":
 
                 // clear screen at frame rate so we always start fresh      
                 display.clear();
+
+                for(let i = 0; i < 5; i++){
+                    display.setPixeld(i,p1.arr[i])
+                }
+                for(let i = 10; i < 15; i++){
+                    display.setPixeld(i,p2.arr[i-10])
+                }
+                console.log(p2.level)
             
                 // show all players in the right place, by adding them to display buffer
-                display.setPixel(playerOne.position, playerOne.playerColor);
-                display.setPixel(playerTwo.position, playerTwo.playerColor);
-                
-
-                // now add the target
-                display.setPixel(target.position, target.playerColor);
 
                 
                 // check if player has caught target
-                if (playerOne.position == target.position)  {
-                    playerOne.score++;              // increment score
-                    this.gameState = "COLLISION";   // go to COLLISION state
+                if (compareArrays(p1.arr,p2.arr) && this.flag)  {
+                    this.flag=false;
+                    keypressallow=false;
+                    this.gameState='mid'
+                    setTimeout(() => {
+                        this.gameState = "change"; 
+                        this.flag=true;
+                        keypressallow=true
+                    },500);
+                    this.level++;      // increment score
+                       // go to COLLISION state
+                }
+
+                if (millis()-newstarttime > 15000){
+                    this.gameState = "explode"; 
                 }
                 
                 // check if other player has caught target        
-                if (playerTwo.position == target.position)  {
-                    playerTwo.score++;              // increment their score
-                    this.gameState = "COLLISION";   // go to COLLISION state
-                }
-
                 break;
 
             // This state is used to play an animation, after a target has been caught by a player 
-            case "COLLISION":
+            case "change":
                 
                  // clear screen at frame rate so we always start fresh      
                  display.clear();
@@ -64,38 +76,19 @@ class Controller {
 
                 //check if animation is done and we should move on to another state
                 if (frameToShow == collisionAnimation.animation.length-1)  {
-                    
-                    // We've hit score max, this player wins
-                    if (playerOne.score >= score.max) {
-                        score.winner = playerOne.playerColor;   // store winning color in score.winner
-                        this.gameState = "SCORE";               // go to state that displays score
-                    
-                    // We've hit score max, this player wins
-                    } else if (playerTwo.score >= score.max) {
-                        score.winner = playerTwo.playerColor;   // store winning color in score.winner
-                        this.gameState = "SCORE";               // go to state that displays score
-
-                    // We haven't hit the max score yet, keep playing    
-                    } else {
-                        target.position = parseInt(random(0,displaySize));  // move the target to a new random position
-                        this.gameState = "PLAY";    // back to play state
-                    }
+                    p1.levelup();
+                    p2.levelup();
+                    newstarttime=millis(); //new level start time
+                    blinkingStarted=false;
+                    this.gameState = "play";    // back to play state
                 } 
 
                 break;
 
             // Game is over. Show winner and clean everything up so we can start a new game.
-            case "SCORE":       
+            case "explode":       
             
-                // reset everyone's score
-                playerOne.score = 0;
-                playerTwo.score = 0;
-
-                // put the target somewhere else, so we don't restart the game with player and target in the same place
-                target.position = parseInt(random(1,displaySize));
-
-                //light up w/ winner color by populating all pixels in buffer with their color
-                display.setAllPixels(score.winner);                    
+                display.setAllPixels(color(255,0,0));                    
 
                 break;
 
@@ -106,32 +99,127 @@ class Controller {
     }
 }
 
-
-
-
-// This function gets called when a key on the keyboard is pressed
-function keyPressed() {
-
-    // Move player one to the left if letter A is pressed
-    if (key == 'A' || key == 'a') {
-        playerOne.move(-1);
+function compareArrays(array1, array2) {
+    // Check if arrays have different lengths
+    if (array1.length !== array2.length) {
+      return false;
+    }
+  
+    // Iterate through each element of the arrays
+    for (let i = 0; i < array1.length; i++) {
+      // If corresponding elements are different, return false
+      if (array1[i] !== array2[i]) {
+        return false;
       }
-    
-    // And so on...
-    if (key == 'D' || key == 'd') {
-    playerOne.move(1);
-    }    
+    }
+  
+    // If all elements are the same, return true
+    return true;
+  }
 
-    if (key == 'J' || key == 'j') {
-    playerTwo.move(-1);
+const behaviors = {
+    //Nothing
+    'x':(player, index) => {
+        player.arr[index] = player.arr[index] 
+      },
+
+    //increase by one, 0-3
+    'a': (player, index) => {
+      player.arr[index] = (player.arr[index] + 1) % 4;
+    },
+
+    //increase by one, 3-6
+    'a1': (player, index) => {
+        player.arr[index] = ((player.arr[index] + 2) % 4 )+3;
+        console.log(player.arr)
+    },
+
+    //increase by 2 through all 10
+    'b': (player, index) => {
+      player.arr[index] = (player.arr[index] + 2) % 10; // Example of a different increment
+    },
+
+    //change all pixels 
+    'c': (player, index) => {
+        for(let i=0; i<5; i++) {
+            player.arr[i] = (player.arr[i] + 1) % 4;
+        }
+    },
+
+    'd': (player, index) => {
+        player.arr.unshift(player.arr.pop());
+    },
+
+    'e': (player, index) => {
+        updateNeighbors(player.arr, index, 2);
+    },
+    
+
+
+
+  };
+
+function keyPressed() {
+    if (keypressallow){
+        const keysP1 = ['Q', 'W', 'E', 'R', 'T'];
+        const keysP2 = ['Y', 'U', 'I', 'O', 'P'];
+        const keyUpper = key.toUpperCase(); // Normalize key to handle lowercase input
+        let player, keyIndex, actArray;
+
+        // Determine if the key is for p1 or p2
+        if (keysP1.includes(keyUpper)) {
+            player = p1;
+            keyIndex = keysP1.indexOf(keyUpper);
+            actArray = p1.act;
+        } else if (keysP2.includes(keyUpper)) { // ';' does not have uppercase
+            player = p2;
+            keyIndex = keysP2.indexOf(keyUpper);
+            actArray = p2.act;
+        }
+
+        // Execute action if the key is found for either player
+        if (player && actArray) {
+            const mode = actArray[keyIndex]; // Get mode from the appropriate act array
+            if (behaviors[mode]) {
+            const action = behaviors[mode]; // Assuming all increments are 1 for simplicity, adjust as needed
+            action(player, keyIndex); // Execute the action for the corresponding key and player
+            }
+        }
+
+        // Example reset logic for key 'R', affecting both players
+        if (keyUpper === 'Z') {
+            if (controller.gameState!='explode'){
+                p1.resetlevel();
+                p2.resetlevel();
+                controller.gameState = "play";
+            }
+
+            if (controller.gameState=='explode'){
+                p1.resetlevel(); //restart
+                p2.resetlevel(); //restart
+                newstarttime=millis(); //new level start time
+                blinkingStarted=false;
+                controller.gameState = "play";
+            }
+
+            // Reset other game elements as needed
+        }
+    }
+}
+
+function updateNeighbors(arr, index, mod) {
+    // Check if the index is valid
+    if (index < 0 || index >= arr.length) {
+      return; // Exit the function if the index is not valid
+    }
+    arr[index] = (arr[index]+1)%mod;
+    // Update the previous element if it exists
+    if (index - 1 >= 0) {
+      arr[index - 1] = (arr[index - 1]+1)%mod;
     }
     
-    if (key == 'L' || key == 'l') {
-    playerTwo.move(1);
-    }
-    
-    // When you press the letter R, the game resets back to the play state
-    if (key == 'R' || key == 'r') {
-    controller.gameState = "PLAY";
+    // Update the next element if it exists
+    if (index + 1 < arr.length) {
+      arr[index + 1] = (arr[index + 1]+1)%mod ;
     }
   }
