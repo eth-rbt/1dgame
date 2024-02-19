@@ -50,18 +50,10 @@ void loop() {
   if (stateChanged) {
     for (int i = 0; i < numButtons; ++i) {
       if (digitalRead(buttonPins[i]) == HIGH && !holdPrinted[i]) { // Check if button is pressed and not held
-        Serial.print("Button ");
-        Serial.print(i + 1);
-        Serial.println(": tapped");
+        Serial.print('a');
       } else if (holdPrinted[i]) { // Check if button is being held
-        Serial .print("Button ");
-        Serial.print(i + 1);
-        Serial.println(": holding");
-      } else {
-        Serial.print("Button ");
-        Serial.print(i + 1);
-        Serial.println(": idle");
-      }
+        Serial.print('b');
+      } 
     }
     Serial.println(); // Print a blank line for readability
     Serial.println(); // Print a blank line for readability
