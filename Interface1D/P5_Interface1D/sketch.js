@@ -6,7 +6,7 @@
 
 */ /////////////////////////////////////
 
-
+import p5 from 'p5'
 let displaySize = 15;   // how many pixels are visible in the game
 let pixelSize = 50;     // how big each 'pixel' looks on screen
 

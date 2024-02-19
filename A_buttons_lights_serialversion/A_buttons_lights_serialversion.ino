@@ -1,6 +1,6 @@
 // The EZ Bomb
 // Constants don't change
-const unsigned long holdThreshold = 1000; // Adjust this threshold as needed (in milliseconds)
+const long holdThreshold = 1000; // Adjust this threshold as needed (in milliseconds)
 
 // Variables will change:
 const int numButtons = 5;
@@ -55,7 +55,7 @@ void loop() {
         Serial.print('b');
       } 
     }
-    Serial.println(); // Print a blank line for readability
+    //Serial.println(); // Print a blank line for readability
     Serial.println(); // Print a blank line for readability
   }
 }
