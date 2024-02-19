@@ -158,8 +158,8 @@ const behaviors = {
 
 
   };
-
-function keyPressed() {
+//function serialkey(key){}
+function serialkeyPressed(key) {
     if (keypressallow){
         const keysP1 = ['Q', 'W', 'E', 'R', 'T'];
         const keysP2 = ['Y', 'U', 'I', 'O', 'P'];
@@ -223,3 +223,5 @@ function updateNeighbors(arr, index, mod) {
       arr[index + 1] = (arr[index + 1]+1)%mod ;
     }
   }
+
+

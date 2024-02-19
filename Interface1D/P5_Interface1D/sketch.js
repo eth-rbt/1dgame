@@ -33,6 +33,10 @@ let frequency; // Current frequency, which will change over time
 let newstarttime;
 let startlevel=0;
 
+let serial; // Variable to hold an instance of the serialport library
+let latestData = "waiting for data"; // Variable to hold the data
+
+
 function setup() {
 
   createCanvas((displaySize*pixelSize), pixelSize);     // dynamically sets canvas size
@@ -52,6 +56,23 @@ function setup() {
 
   controller = new Controller();            // Initializing controller
   blinkingLayer = createGraphics((displaySize*pixelSize), pixelSize);
+  
+  // Instantiate the serialport object
+  serial = new p5.SerialPort();
+
+  // Get a list of all available ports
+  serial.list();
+  
+  // Open the first available port
+  serial.open('/dev/tty.usbmodem1411');
+
+  // Register some callbacks
+  serial.on('connected', serverConnected);
+  serial.on('list', gotList);
+  serial.on('data', gotData);
+  serial.on('error', gotError);
+  serial.on('open', gotOpen);
+  serial.on('close', gotClose);
 
 }
 
@@ -66,6 +87,10 @@ function draw() {
   // After we've updated our states, we show the current one 
   display.show();
 
+  blinklayer();
+}
+
+function blinklayer(){
   if (controller.gameState=='play'){
     startTime=newstarttime+3000;
     //blinking layer
@@ -95,11 +120,43 @@ function draw() {
     
       image(blinkingLayer, 0, 0);
     }
-    
   }
-
-  
 
 }
 
+//serial stuff
+
+
+function serverConnected() {
+  console.log('connected to server.');
+}
+
+function gotList(thelist) {
+  console.log("List of Serial Ports:");
+  for (let i = 0; i < thelist.length; i++) {
+    console.log(i + " " + thelist[i]);
+  }
+}
+
+function gotOpen() {
+  console.log('Serial Port is Open');
+}
+
+function gotClose(){
+  console.log('Serial Port is Closed');
+  latestData = "Serial Port is Closed";
+}
+
+function gotError(theerror) {
+  console.log(theerror);
+}
+
+function gotData() {
+  let currentString = serial.readLine(); // Read the incoming string
+  trim(currentString); // Remove any trailing whitespace
+  if (!currentString) return; // If the string is empty, do nothing
+  console.log(currentString); // Log the string
+  // Assuming your serial device sends single characters like 'A', 'B', etc.
+  serialkeyPressed(currentString);
+}
 
