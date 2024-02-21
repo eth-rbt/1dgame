@@ -6,7 +6,8 @@
 
 */ /////////////////////////////////////
 
-import p5 from 'p5'
+//import p5 from 'p5'
+
 let displaySize = 15;   // how many pixels are visible in the game
 let pixelSize = 50;     // how big each 'pixel' looks on screen
 
@@ -58,9 +59,9 @@ function setup() {
   blinkingLayer = createGraphics((displaySize*pixelSize), pixelSize);
   
   // Instantiate the serialport object
+  
   serial = new p5.SerialPort();
 
-  // Get a list of all available ports
   serial.list();
   
   // Open the first available port
@@ -73,6 +74,7 @@ function setup() {
   serial.on('error', gotError);
   serial.on('open', gotOpen);
   serial.on('close', gotClose);
+  
 
 }
 
