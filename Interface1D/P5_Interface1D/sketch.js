@@ -34,9 +34,10 @@ let frequency; // Current frequency, which will change over time
 let newstarttime;
 let startlevel=0;
 
-let serial; // Variable to hold an instance of the serialport library
+//let serial; // Variable to hold an instance of the serialport library
 let latestData = "waiting for data"; // Variable to hold the data
-
+let serial1;
+let serial2;
 
 function setup() {
 
@@ -59,21 +60,26 @@ function setup() {
   blinkingLayer = createGraphics((displaySize*pixelSize), pixelSize);
   
   // Instantiate the serialport object
-  
-  serial = new p5.SerialPort();
+  serial1 = new p5.SerialPort();
+  serial1.open('/dev/tty.usbmodem1301'); // Use the correct port for your first device
+  serial1.on('data', gotData1); // Set the callback function for when data is received
 
-  serial.list();
+  // Initialize the second serial connection
+  serial2 = new p5.SerialPort();
+  serial2.open('/dev/tty.usbmodem1401'); // Use the correct port for your second device
+  serial2.on('data', gotData2); 
+  //serial = new p5.SerialPort();
+  //serial.list();
   
   // Open the first available port
-  serial.open('/dev/tty.usbmodem101');
+  //serial.open('/dev/tty.usbmodem101');
 
   // Register some callbacks
-  serial.on('connected', serverConnected);
-  serial.on('list', gotList);
-  serial.on('data', gotData);
-  serial.on('error', gotError);
-  serial.on('open', gotOpen);
-  serial.on('close', gotClose);
+  serial1.on('connected', serverConnected);
+  serial1.on('list', gotList);
+  serial1.on('error', gotError);
+  serial1.on('open', gotOpen);
+  serial1.on('close', gotClose);
   
 
 }
@@ -153,8 +159,17 @@ function gotError(theerror) {
   console.log(theerror);
 }
 
-function gotData() {
-  let currentString = serial.readLine(); // Read the incoming string
+function gotData1() {
+  let currentString = serial1.readLine(); // Read the incoming string
+  trim(currentString); // Remove any trailing whitespace
+  if (!currentString) return; // If the string is empty, do nothing
+  console.log(currentString); // Log the string
+  // Assuming your serial device sends single characters like 'A', 'B', etc.
+  serialkeyPressed(currentString);
+}
+
+function gotData2() {
+  let currentString = serial2.readLine(); // Read the incoming string
   trim(currentString); // Remove any trailing whitespace
   if (!currentString) return; // If the string is empty, do nothing
   console.log(currentString); // Log the string
