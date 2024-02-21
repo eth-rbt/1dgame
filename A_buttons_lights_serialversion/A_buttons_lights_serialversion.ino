@@ -7,6 +7,7 @@ const int numButtons = 5;
 const int buttonPins[numButtons] = {6, 5, 4, 3, 2}; // Pins for the buttons, rearranged order
 unsigned long buttonPressStartTime[numButtons] = {0}; // Array to store the time when button press starts
 bool holdPrinted[numButtons] = {false}; // Array to track if hold message has been printed
+char buttonChars[numButtons] = {'q', 'w', 'e', 'r', 't'};
 
 void setup() {
   // put your setup code here, to run once:
@@ -20,10 +21,10 @@ void loop() {
   // Variable to track if any button state changed
   bool stateChanged = false;
 
+  // Check each button
   for (int i = 0; i < numButtons; ++i) {
     int buttonState = digitalRead(buttonPins[i]);
-
-    // Check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+    //Serial.print("hi");
     if (buttonState == HIGH) {
       if (buttonPressStartTime[i] == 0) {
         // Button has just been pressed
@@ -44,18 +45,23 @@ void loop() {
       }
       holdPrinted[i] = false; // Reset holdPrinted flag when button is released
     }
+    // Your existing code to handle button press and hold logic
+    // (As provided in your question)
   }
 
-  // Print the status of all buttons if any button state changed
+
+  // Print characters if state changed
   if (stateChanged) {
     for (int i = 0; i < numButtons; ++i) {
-      if (digitalRead(buttonPins[i]) == HIGH && !holdPrinted[i]) { // Check if button is pressed and not held
-        Serial.print('e');
-      } else if (holdPrinted[i]) { // Check if button is being held
-        Serial.print('b');
-      } 
+      if (digitalRead(buttonPins[i]) == HIGH && !holdPrinted[i]) {
+        Serial.print(buttonChars[i]); // Print assigned character for each button
+        delay(200);
+      } else if (holdPrinted[i]) {
+        // Handle long press differently if needed
+        // For example, print uppercase or a different character
+        // Serial.print(toupper(buttonChars[i])); // Example modification
+      }
     }
-    //Serial.println(); // Print a blank line for readability
-    Serial.println(); // Print a blank line for readability
+    Serial.println(); // Ensure output is on a new line
   }
 }

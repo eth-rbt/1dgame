@@ -65,7 +65,7 @@ function setup() {
   serial.list();
   
   // Open the first available port
-  serial.open('/dev/tty.usbmodem1411');
+  serial.open('/dev/tty.usbmodem101');
 
   // Register some callbacks
   serial.on('connected', serverConnected);

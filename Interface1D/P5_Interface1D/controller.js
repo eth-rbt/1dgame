@@ -159,7 +159,7 @@ const behaviors = {
 
   };
 //function serialkey(key){}
-function keyPressed() {
+function serialkeyPressed(key) {
     if (keypressallow){
         const keysP1 = ['Q', 'W', 'E', 'R', 'T'];
         const keysP2 = ['Y', 'U', 'I', 'O', 'P'];
