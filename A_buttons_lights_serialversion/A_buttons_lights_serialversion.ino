@@ -58,6 +58,7 @@ void loop() {
       if (digitalRead(buttonPins[i]) == HIGH && !holdPrinted[i]) {
         Serial.print(buttonChars[i]); // Print assigned character for each button
         delay(200);
+        Serial.println();
       } else if (holdPrinted[i]) {
         // Handle long press differently if needed
         // For example, print uppercase or a different character
