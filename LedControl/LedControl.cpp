@@ -1,39 +1,30 @@
-#include "FastLED.h"
+#include "LedControl.h"
 
-#define NUM_LEDS 5
-#define DATA_PIN 5
-#define CLOCK_PIN 4
-
-CRGB leds[NUM_LEDS];
-
-void setup() {
-  Serial.begin(9600);
-  FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR>(leds, NUM_LEDS);
+LedControl::LedControl(int dataPin, int clockPin, int numLeds) {
+  leds = new CRGB[numLeds];
+  this->numLeds = numLeds;
+  FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, BGR>(leds, numLeds);
 }
 
-void loop() {
-  if (Serial.available()) {
-    String input = Serial.readStringUntil('\n'); // Read the input until newline character
-    
-    // Parse the input
+void LedControl::setup() {
+  Serial.begin(9600);
+}
+
+void LedControl::updateColors(String input) {
+  if (input.length() > 0) {
     int colorIndices[NUM_LEDS];
     int index = 0;
-    int startIndex = 0; // Start index for substring extraction
-    int spaceIndex = input.indexOf(' '); // Find the first space
+    int startIndex = 0;
+    int spaceIndex = input.indexOf(' ');
     while (spaceIndex != -1 && index < NUM_LEDS) {
       colorIndices[index++] = input.substring(startIndex, spaceIndex).toInt();
       startIndex = spaceIndex + 1;
       spaceIndex = input.indexOf(' ', startIndex);
     }
-    
-    // Extract the last color index (or the only one if there's only one)
     if (index < NUM_LEDS) {
       colorIndices[index++] = input.substring(startIndex).toInt();
     }
-    
-    // Check if the correct number of color indices are provided
     if (index == NUM_LEDS) {
-      // Set colors for all LEDs
       for (int i = 0; i < NUM_LEDS; i++) {
         switch (colorIndices[i]) {
           case 0:
@@ -73,7 +64,7 @@ void loop() {
             break;
         }
       }
-      FastLED.show(); // Display the changes
+      FastLED.show();
     }
   }
 }
