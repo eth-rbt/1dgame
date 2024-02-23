@@ -23,6 +23,7 @@ class Display {
         7: color(165, 42, 42),  //brown
         8: color(0, 255, 255),  //cyan
         9: color(255, 0, 255),  //magenta
+        10: color(0,0,0), //black
         // Add more color mappings as needed
       };
 
