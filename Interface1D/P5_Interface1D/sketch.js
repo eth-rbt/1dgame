@@ -32,7 +32,7 @@ let blinkingStarted = false;
 let initialFrequency = 0.0002; // Initial frequency of the sine wave
 let frequency; // Current frequency, which will change over time
 let newstarttime;
-let startlevel=0;
+let startlevel=9;
 
 //let serial; // Variable to hold an instance of the serialport library
 let latestData = "waiting for data"; // Variable to hold the data

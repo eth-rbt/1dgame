@@ -134,6 +134,10 @@ const behaviors = {
         console.log(player.arr)
     },
 
+    'a2': (player, index) => {
+        player.arr[index] = (player.arr[index] + 1) % 2;
+    },
+
     //increase by 2 through all 10
     'b': (player, index) => {
       player.arr[index] = (player.arr[index] + 2) % 10; // Example of a different increment
@@ -153,12 +157,19 @@ const behaviors = {
     'e': (player, index) => {
         updateNeighbors(player.arr, index, 2);
     },
-    
+
+    'f': (player, index) => {
+        player.arr.reverse();
+    },
 
 
 
   };
-//function serialkey(key){}
+function keyPressed(){
+    serialkeyPressed(key)
+}
+
+
 function serialkeyPressed(key) {
     if (keypressallow){
         const keysP1 = ['Q', 'W', 'E', 'R', 'T'];
