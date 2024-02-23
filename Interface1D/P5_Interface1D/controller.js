@@ -52,7 +52,7 @@ class Controller {
                        // go to COLLISION state
                 }
 
-                if (millis()-newstarttime > 15000){
+                if (millis()-newstarttime > 20000){
                     this.gameState = "explode"; 
                 }
                 

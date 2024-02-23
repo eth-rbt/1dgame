@@ -46,7 +46,7 @@ function setup() {
   display = new Display(displaySize, pixelSize);        //Initializing the display
   newstarttime=millis();
   startTime = millis() + 3000; // Start blinking after 10 seconds
-  increasingSpeedPhase = 15000; // 10 seconds after blinking starts, for the next 10 seconds, increase speed
+  increasingSpeedPhase = 20000; // 10 seconds after blinking starts, for the next 10 seconds, increase speed
   frequency = initialFrequency;
 
   p1 = new Player(0,startlevel, displaySize);   // num, start level, display size
@@ -111,9 +111,9 @@ function blinklayer(){
       // Adjust frequency based on how much time has passed since blinking started
       if (currentTime < startTime + increasingSpeedPhase) {
         let progress = (currentTime - startTime) / (increasingSpeedPhase - 3000);
-        frequency = initialFrequency + progress * (0.008 - initialFrequency); // Increase frequency up to 0.5
+        frequency = initialFrequency + progress * (0.01 - initialFrequency); // Increase frequency up to 0.5
       } else {
-        frequency = 0.008; // Keep frequency constant after it reaches 0.5
+        frequency = 0.01; // Keep frequency constant after it reaches 0.5
       }
 
       // Update the transparency based on a sine wave with changing frequency
