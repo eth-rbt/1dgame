@@ -40,21 +40,30 @@ class Controller {
                 
                 // check if player has caught target
                 if (compareArrays(p1.arr,p2.arr) && this.flag)  {
+                    console.log(p2.level);
+                    if (p2.level>=9){
+                        this.gameState = "win"; 
+                        break;
+                    }   
                     this.flag=false;
                     keypressallow=false;
                     this.gameState='mid'
+
                     setTimeout(() => {
                         this.gameState = "change"; 
                         this.flag=true;
                         keypressallow=true
                     },500);
-                    this.level++;      // increment score
+                    this.level++;
+                      // increment score
                        // go to COLLISION state
                 }
 
                 if (millis()-newstarttime > 20000){
                     this.gameState = "explode"; 
                 }
+
+                
                 
                 // check if other player has caught target        
                 break;
@@ -93,6 +102,12 @@ class Controller {
                 break;
 
             // Not used, it's here just for code compliance
+            case "win":       
+            
+                display.setAllPixels(color(0,255,0));                    
+
+                break;
+
             default:
                 break;
         }
