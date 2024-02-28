@@ -4,11 +4,11 @@
 LedControl::LedControl(int dataPin, int clockPin, int numLeds) {
   leds = new CRGB[numLeds];
   this->numLeds = numLeds;
-  FastLED.addLeds<APA102, 5, 4, BGR>(leds, numLeds);
+  FastLED.addLeds<APA102, 9, 8, BGR>(leds, numLeds);
 }
 
 void LedControl::setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
 }
 
 void LedControl::updateColors(String input) {
@@ -68,6 +68,8 @@ void LedControl::updateColors(String input) {
         }
       }
       //Serial.print(leds);
+      FastLED.setBrightness(20);
+
       FastLED.show();
     }
   }

@@ -1,23 +1,24 @@
+#include "EZBomb.h"
 #include "LedControl.h"
 
-#define dataPin 5
-#define clockPin 4
 int numLeds= 5;
+#define dataPin 9
+#define clockPin 8
 
 LedControl ledControl(dataPin, clockPin, numLeds);
+EZBomb ezBomb;
 
 void setup() {
+  ezBomb.setup();
   ledControl.setup();
+
 }
 
 void loop() {
-  
+  ezBomb.loop();
   if (Serial.available()) {
-    String input = Serial.readStringUntil('\n');
+    String input = Serial.readStringUntil('/n');
     //Serial.print(input);
     ledControl.updateColors(input);
   }
-  //Serial.print(ledControl.numLeds);
-  //Serial.print(ledControl.leds);
-  //FastLED.show();
 }

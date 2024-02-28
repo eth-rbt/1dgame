@@ -62,9 +62,25 @@ class Controller {
                 if (millis()-newstarttime > 20000){
                     this.gameState = "explode"; 
                 }
+                
+                if (!compareArrays(p1.arr, p1.oldarr)){
+                    /*
+                    for (let i=0 ; i<5; i++){
+                        port.write(p1.arr[i]);
+                    }
+                    */
+                    //port.write(mess(p1.arr));
+                    //port.write('/n');
+                    serial1.write(mess(p1.arr));
+                    serial1.write('/n');
+                    //console.log(p1.arr);
+                    p1.oldarr=[...p1.arr];
+                }
+                
 
-                
-                
+                //
+                //serial2.write(mess(p2.arr));
+
                 // check if other player has caught target        
                 break;
 
@@ -97,15 +113,22 @@ class Controller {
             // Game is over. Show winner and clean everything up so we can start a new game.
             case "explode":       
             
-                display.setAllPixels(color(255,0,0));                    
-
+                display.setAllPixels(color(255,0,0));      
+                
+                /*
+                serial1.write(mess([1,1,1,1,1]));
+                serial2.write(mess([1,1,1,1,1]));              
+                */
                 break;
 
             // Not used, it's here just for code compliance
             case "win":       
             
-                display.setAllPixels(color(0,255,0));                    
-
+                display.setAllPixels(color(0,255,0));  
+                /*
+                serial1.write(mess([0,0,0,0,0]));
+                serial2.write(mess([0,0,0,0,0]));                  
+                */
                 break;
 
             default:
@@ -180,6 +203,18 @@ const behaviors = {
 
 
   };
+
+function mess(arr){
+    message=''
+    for(let i = 0; i < arr.length; i++){
+        message+=arr[i]
+        message+=' '
+    }
+    message+='/n'
+    console.log(message)
+    return message
+} 
+  
 function keyPressed(){
     serialkeyPressed(key)
 }
@@ -190,10 +225,15 @@ function serialkeyPressed(key) {
         const keysP1 = ['Q', 'W', 'E', 'R', 'T'];
         const keysP2 = ['Y', 'U', 'I', 'O', 'P'];
         const keyUpper = key.toUpperCase(); // Normalize key to handle lowercase input
+        console.log(typeof(key));
+        console.log(key);
+        console.log(keysP1.includes(keyUpper))
         let player, keyIndex, actArray;
 
         // Determine if the key is for p1 or p2
+
         if (keysP1.includes(keyUpper)) {
+            console.log(keyUpper)
             player = p1;
             keyIndex = keysP1.indexOf(keyUpper);
             actArray = p1.act;

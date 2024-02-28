@@ -38,6 +38,10 @@ let startlevel=0;
 let latestData = "waiting for data"; // Variable to hold the data
 let serial1;
 let serial2;
+let port;
+let str;
+let connectBtn;
+
 
 function setup() {
 
@@ -58,23 +62,39 @@ function setup() {
 
   controller = new Controller();            // Initializing controller
   blinkingLayer = createGraphics((displaySize*pixelSize), pixelSize);
-  
-  // Instantiate the serialport object
+
+  /*
+  port=createSerial();
+  port.open(57600);
+  let usedPorts = usedSerialPorts();
+  if (usedPorts.length > 0) {
+    port.open(usedPorts[0], 57600);
+  }
+
+  // any other ports can be opened via a dialog after
+  // user interaction (see connectBtnClick below)
+
+  connectBtn = createButton('Connect to Arduino');
+  connectBtn.position(80, 200);
+  connectBtn.mousePressed(connectBtnClick);
+
+  let sendBtn = createButton('Send hello');
+  sendBtn.position(220, 200);
+  sendBtn.mousePressed(sendBtnClick);
+  */
+
+  //port.open('/dev/tty.usbmodem1401', 115200);
+
+
   serial1 = new p5.SerialPort();
-  serial1.open('/dev/tty.usbmodem1301'); // Use the correct port for your first device
+  serial1.open('/dev/tty.usbmodem1401', {
+    baudRate: 57600
+  });; // Use the correct port for your first device
   serial1.on('data', gotData1); // Set the callback function for when data is received
-
-  // Initialize the second serial connection
   serial2 = new p5.SerialPort();
-  serial2.open('/dev/tty.usbmodem1401'); // Use the correct port for your second device
+  serial2.open('/dev/tty.usbmodem1301'); // Use the correct port for your second device
   serial2.on('data', gotData2); 
-  //serial = new p5.SerialPort();
-  //serial.list();
-  
-  // Open the first available port
-  //serial.open('/dev/tty.usbmodem101');
 
-  // Register some callbacks
   serial1.on('connected', serverConnected);
   serial1.on('list', gotList);
   serial1.on('error', gotError);
@@ -88,12 +108,19 @@ function draw() {
 
   // start with a blank screen
   background(0, 0, 0);    
+  /*str = port.read();
+  
+  if (str.length > 0) {
+    console.log(str);
+    trim(str);
+    serialkeyPressed(str);
+  }*/
 
   // Runs state machine at determined framerate
   controller.update();
-
   // After we've updated our states, we show the current one 
   display.show();
+  // changes button label based on connection status
 
   blinklayer();
 }
@@ -127,13 +154,24 @@ function blinklayer(){
       // Draw the blinking layer on top of the main canvas
     
       image(blinkingLayer, 0, 0);
+      
     }
   }
 
 }
 
 //serial stuff
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open('Arduino', 57600);
+  } else {
+    port.close();
+  }
+}
 
+function sendBtnClick() {
+  port.write("Hello from p5.js\n");
+}
 
 function serverConnected() {
   console.log('connected to server.');

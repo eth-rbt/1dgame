@@ -7,13 +7,13 @@ const int numButtons = 5;
 const int buttonPins[numButtons] = {6, 5, 4, 3, 2}; // Pins for the buttons, rearranged order
 unsigned long buttonPressStartTime[numButtons] = {0}; // Array to store the time when button press starts
 bool holdPrinted[numButtons] = {false}; // Array to track if hold message has been printed
-char buttonChars[numButtons] = {'q', 'w', 'e', 'r', 't'};
+char buttonChars[numButtons] = {'Q', 'W', 'E', 'R', 'T'};
 //char buttonChars[numButtons] = {'y', 'u', 'i', 'o', 'p'};
 
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(57600);
   for (int i = 0; i < numButtons; ++i) {
     pinMode(buttonPins[i], INPUT);
   }
@@ -58,13 +58,13 @@ void loop() {
       if (digitalRead(buttonPins[i]) == HIGH && !holdPrinted[i]) {
         Serial.print(buttonChars[i]); // Print assigned character for each button
         delay(200);
-        Serial.println();
+        //Serial.println();
       } else if (holdPrinted[i]) {
         // Handle long press differently if needed
         // For example, print uppercase or a different character
         // Serial.print(toupper(buttonChars[i])); // Example modification
       }
     }
-    Serial.println(); // Ensure output is on a new line
+    //Serial.println(); // Ensure output is on a new line
   }
 }

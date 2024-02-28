@@ -86,6 +86,7 @@ class Player {
         this.displaySize = _displaySize;
         this.leveldict=leveldict;
         this.actdict=actdict;
+        this.oldarr=[0,0,0,0,0];
     }
 
     levelup(){
