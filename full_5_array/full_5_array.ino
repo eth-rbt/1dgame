@@ -17,7 +17,7 @@ void setup() {
 void loop() {
   ezBomb.loop();
   if (Serial.available()) {
-    String input = Serial.readStringUntil('/n');
+    String input = Serial.readStringUntil('\n');
     //Serial.print(input);
     ledControl.updateColors(input);
   }

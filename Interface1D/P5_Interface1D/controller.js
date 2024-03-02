@@ -24,6 +24,13 @@ class Controller {
             // This is the main game state, where the playing actually happens
             case "play":
 
+                if (nostart){
+                    serial1.write('start');
+                    serial1.write('\n');
+                    console.log('start');
+                    nostart=false;
+                }
+
                 // clear screen at frame rate so we always start fresh      
                 display.clear();
 
@@ -33,7 +40,7 @@ class Controller {
                 for(let i = 10; i < 15; i++){
                     display.setPixeld(i,p2.arr[i-10])
                 }
-                console.log(p2.level)
+                //console.log(p2.level)
             
                 // show all players in the right place, by adding them to display buffer
 
@@ -72,9 +79,10 @@ class Controller {
                     //port.write(mess(p1.arr));
                     //port.write('/n');
                     serial1.write(mess(p1.arr));
-                    serial1.write('/n');
+                    //serial1.write('\n');
                     //console.log(p1.arr);
                     p1.oldarr=[...p1.arr];
+
                 }
                 
 
@@ -89,6 +97,13 @@ class Controller {
                 
                  // clear screen at frame rate so we always start fresh      
                  display.clear();
+                 if(nomid){
+                    serial1.write(mess([10,10,10,10,10]));
+                    serial1.write('\n');
+                    serial1.write('mid');
+                    serial1.write('\n');
+                    nomid=false;
+                 }
 
                 // play explosion animation one frame at a time.
                 // first figure out what frame to show
@@ -105,16 +120,30 @@ class Controller {
                     p2.levelup();
                     newstarttime=millis(); //new level start time
                     blinkingStarted=false;
+                    serial1.write('start\n');
+                    serial1.write('\n');
+                    nostart=true;
                     this.gameState = "play";    // back to play state
+                    serial1.write(mess(p1.arr));
+                    serial1.write('\n');
+                    nomid=true
                 } 
+                
 
                 break;
 
             // Game is over. Show winner and clean everything up so we can start a new game.
             case "explode":       
             
-                display.setAllPixels(color(255,0,0));      
                 
+                if(noexplode){    
+                    display.setAllPixels(color(255,0,0));  
+                    serial1.write(mess([1,1,1,1,1]));
+                    serial1.write('\n');
+                    serial1.write('explode');
+                    serial1.write('\n');
+                    noexplode=false;
+                }
                 /*
                 serial1.write(mess([1,1,1,1,1]));
                 serial2.write(mess([1,1,1,1,1]));              
@@ -122,11 +151,19 @@ class Controller {
                 break;
 
             // Not used, it's here just for code compliance
-            case "win":       
-            
-                display.setAllPixels(color(0,255,0));  
+            case "win":   
+
+                if(nowin){
+                    display.setAllPixels(color(0,255,0));  
+
+                    serial1.write(mess([0,0,0,0,0]));
+                    serial1.write('\n');
+                    serial1.write('win');
+                    serial1.write('\n');
+                    nowin=false;
+                }
                 /*
-                serial1.write(mess([0,0,0,0,0]));
+                
                 serial2.write(mess([0,0,0,0,0]));                  
                 */
                 break;
@@ -210,7 +247,7 @@ function mess(arr){
         message+=arr[i]
         message+=' '
     }
-    message+='/n'
+    message+='\n'
     console.log(message)
     return message
 } 
@@ -225,9 +262,9 @@ function serialkeyPressed(key) {
         const keysP1 = ['Q', 'W', 'E', 'R', 'T'];
         const keysP2 = ['Y', 'U', 'I', 'O', 'P'];
         const keyUpper = key.toUpperCase(); // Normalize key to handle lowercase input
-        console.log(typeof(key));
-        console.log(key);
-        console.log(keysP1.includes(keyUpper))
+        //console.log(typeof(key));
+        //console.log(key);
+        //console.log(keysP1.includes(keyUpper))
         let player, keyIndex, actArray;
 
         // Determine if the key is for p1 or p2

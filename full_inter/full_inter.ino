@@ -1,3 +1,5 @@
+#include "EZBomb.h"
+#include "LedControl.h"
 #include <FastLED.h>
 
 #define NUM_LEDS1 6 // Number of LEDs
@@ -6,19 +8,29 @@
 #define WAVE_PERIOD 5000 // Initial period of the sine wave in milliseconds
 #define SPEED_INCREASE 5 // How much to decrease the wave period by, to increase speed
 
+int numLeds= 5;
+#define dataPin 9
+#define clockPin 8
+
 CRGB leds1[NUM_LEDS1];
 unsigned long startTime = 0;
 bool startEffect = false;
 int wavePeriod = WAVE_PERIOD;
 bool ingame=false;
 
+LedControl ledControl(dataPin, clockPin, numLeds);
+EZBomb ezBomb;
+
 void setup() {
+  ezBomb.setup();
+  ledControl.setup();
   Serial.begin(57600); // Start serial communication at 9600 baud
   FastLED.addLeds<APA102, 15, 14, BGR>(leds1, NUM_LEDS1); //D,C
   FastLED.setBrightness(MAX_BRIGHTNESS);// Initialize the LED strip
 }
 
 void loop() {
+  ezBomb.loop();
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
     //Serial.println(command);// Read the incoming command
@@ -39,12 +51,13 @@ void loop() {
       ingame=true;
       startTime = millis(); // Reset start time
       wavePeriod = WAVE_PERIOD; // Reset to initial period
-    }  
+    } else {
+      ledControl.updateColors(command);
+    }    
   }
   if (ingame){
     updateLedEffect();
   }
-
 }
 
 void updateLedEffect() {

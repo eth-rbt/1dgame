@@ -41,6 +41,10 @@ let serial2;
 let port;
 let str;
 let connectBtn;
+let nostart=true;
+let noexplode=true;
+let nowin=true;
+let nomid=true;
 
 
 function setup() {
@@ -91,15 +95,18 @@ function setup() {
     baudRate: 57600
   });; // Use the correct port for your first device
   serial1.on('data', gotData1); // Set the callback function for when data is received
+  /*
   serial2 = new p5.SerialPort();
   serial2.open('/dev/tty.usbmodem1301'); // Use the correct port for your second device
   serial2.on('data', gotData2); 
-
+*/
   serial1.on('connected', serverConnected);
   serial1.on('list', gotList);
   serial1.on('error', gotError);
   serial1.on('open', gotOpen);
   serial1.on('close', gotClose);
+  
+  
   
 
 }
@@ -199,9 +206,10 @@ function gotError(theerror) {
 
 function gotData1() {
   let currentString = serial1.readLine(); // Read the incoming string
+  console.log(currentString);
   trim(currentString); // Remove any trailing whitespace
   if (!currentString) return; // If the string is empty, do nothing
-  console.log(currentString); // Log the string
+   // Log the string
   // Assuming your serial device sends single characters like 'A', 'B', etc.
   serialkeyPressed(currentString);
 }
