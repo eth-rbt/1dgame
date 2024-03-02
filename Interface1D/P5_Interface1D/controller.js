@@ -25,9 +25,7 @@ class Controller {
             case "play":
 
                 if (nostart){
-                    serial1.write('start');
-                    serial1.write('\n');
-                    console.log('start');
+                    send('start');
                     nostart=false;
                 }
 
@@ -71,24 +69,14 @@ class Controller {
                 }
                 
                 if (!compareArrays(p1.arr, p1.oldarr)){
-                    /*
-                    for (let i=0 ; i<5; i++){
-                        port.write(p1.arr[i]);
-                    }
-                    */
-                    //port.write(mess(p1.arr));
-                    //port.write('/n');
-                    serial1.write(mess(p1.arr));
-                    //serial1.write('\n');
-                    //console.log(p1.arr);
+                    serial1.write(mess(p1.arr))
                     p1.oldarr=[...p1.arr];
-
+                }
+                if (!compareArrays(p2.arr, p2.oldarr)){
+                    serial2.write(mess(p2.arr))
+                    p2.oldarr=[...p2.arr];
                 }
                 
-
-                //
-                //serial2.write(mess(p2.arr));
-
                 // check if other player has caught target        
                 break;
 
@@ -98,10 +86,8 @@ class Controller {
                  // clear screen at frame rate so we always start fresh      
                  display.clear();
                  if(nomid){
-                    serial1.write(mess([10,10,10,10,10]));
-                    serial1.write('\n');
-                    serial1.write('mid');
-                    serial1.write('\n');
+                    send(mess([10,10,10,10,10]));
+                    send('mid')
                     nomid=false;
                  }
 
@@ -120,12 +106,11 @@ class Controller {
                     p2.levelup();
                     newstarttime=millis(); //new level start time
                     blinkingStarted=false;
-                    serial1.write('start\n');
-                    serial1.write('\n');
+                    send('start');
                     nostart=true;
                     this.gameState = "play";    // back to play state
                     serial1.write(mess(p1.arr));
-                    serial1.write('\n');
+                    serial2.write(mess(p2.arr));
                     nomid=true
                 } 
                 
@@ -138,16 +123,10 @@ class Controller {
                 
                 if(noexplode){    
                     display.setAllPixels(color(255,0,0));  
-                    serial1.write(mess([1,1,1,1,1]));
-                    serial1.write('\n');
-                    serial1.write('explode');
-                    serial1.write('\n');
+                    send(mess([1,1,1,1,1]));
+                    send('explode');
                     noexplode=false;
                 }
-                /*
-                serial1.write(mess([1,1,1,1,1]));
-                serial2.write(mess([1,1,1,1,1]));              
-                */
                 break;
 
             // Not used, it's here just for code compliance
@@ -156,16 +135,11 @@ class Controller {
                 if(nowin){
                     display.setAllPixels(color(0,255,0));  
 
-                    serial1.write(mess([0,0,0,0,0]));
-                    serial1.write('\n');
-                    serial1.write('win');
-                    serial1.write('\n');
+                    send(mess([0,0,0,0,0]));
+                    send('win');
                     nowin=false;
                 }
-                /*
-                
-                serial2.write(mess([0,0,0,0,0]));                  
-                */
+
                 break;
 
             default:
@@ -240,6 +214,12 @@ const behaviors = {
 
 
   };
+function send(str){
+    serial1.write(str);
+    serial1.write('\n');
+    serial2.write(str);
+    serial2.write('\n');
+}
 
 function mess(arr){
     message=''
@@ -248,7 +228,7 @@ function mess(arr){
         message+=' '
     }
     message+='\n'
-    console.log(message)
+    //console.log(message)
     return message
 } 
   
@@ -302,7 +282,13 @@ function serialkeyPressed(key) {
                 p2.resetlevel(); //restart
                 newstarttime=millis(); //new level start time
                 blinkingStarted=false;
-                controller.gameState = "play";
+                send('start');
+                nostart=true;
+                controller.gameState = "play";    // back to play state
+                serial1.write(mess(p1.arr));
+                serial2.write(mess(p1.arr));
+                nomid=true;
+                noexplode=true;
             }
 
             // Reset other game elements as needed

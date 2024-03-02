@@ -5,6 +5,7 @@ EZBomb::EZBomb()
     // Initialize arrays here if needed or in the setup function
     int tempButtonPins[numButtons] = {6, 5, 4, 3, 2};
     char tempButtonChars[numButtons] = {'q', 'w', 'e', 'r', 't'};
+    //char tempButtonChars[numButtons] = {'y', 'u', 'i', 'o', 'p'};
     memcpy(buttonPins, tempButtonPins, sizeof(tempButtonPins));
     memcpy(buttonChars, tempButtonChars, sizeof(tempButtonChars));
 }
