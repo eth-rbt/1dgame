@@ -6,15 +6,18 @@ EZBomb::EZBomb()
     int tempButtonPins[numButtons] = {6, 5, 4, 3, 2};
     char tempButtonChars[numButtons] = {'q', 'w', 'e', 'r', 't'};
     //char tempButtonChars[numButtons] = {'y', 'u', 'i', 'o', 'p'};
+    unsigned long tempDebounceTime[numButtons] = {0,0,0,0,0};  // the last time the output pin was toggled
+    
     memcpy(buttonPins, tempButtonPins, sizeof(tempButtonPins));
     memcpy(buttonChars, tempButtonChars, sizeof(tempButtonChars));
+    memcpy(debounceTime, tempDebounceTime, sizeof(tempButtonChars));
 }
 
 void EZBomb::setup()
 {
     Serial.begin(57600);
     for (int i = 0; i < numButtons; ++i) {
-        pinMode(buttonPins[i], INPUT);
+        pinMode(buttonPins[i], INPUT_PULLUP);
         buttonPressStartTime[i] = 0;
         holdPrinted[i] = false;
         lastButtonState[i]=LOW;
@@ -27,7 +30,7 @@ void EZBomb::loop()
     for (int i = 0; i < numButtons; ++i) {
     int buttonState = digitalRead(buttonPins[i]);
     //Serial.print("hi");
-    if (buttonState == HIGH) {
+    if (buttonState == LOW) {
       if (buttonPressStartTime[i] == 0) {
         // Button has just been pressed
         buttonPressStartTime[i] = millis(); // Record the time of button press
@@ -53,9 +56,9 @@ void EZBomb::loop()
 
     if (stateChanged) {
         for (int i = 0; i < numButtons; ++i) {
-            if (digitalRead(buttonPins[i]) == HIGH && !holdPrinted[i]) {
+            if (digitalRead(buttonPins[i]) == LOW && !holdPrinted[i]) {
                 Serial.println(buttonChars[i]);
-                delay(200); // Consider removing or reducing delay for responsiveness
+                delay(300); // Consider removing or reducing delay for responsiveness
                 //Serial.println();
             }
         }

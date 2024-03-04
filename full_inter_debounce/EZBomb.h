@@ -18,6 +18,7 @@ private:
     unsigned long debounceDelay = 50; 
     unsigned long debounceTime[numButtons];
     bool lastButtonState[numButtons];
+    bool buttonState[numButtons];
     const long holdThreshold = 1000; // ms
     void resetButtonState(int index);
     unsigned long lastDebounceTime[numButtons]; // <-- Added for debounce
