@@ -68,7 +68,7 @@ void LedControl::updateColors(String input) {
         }
       }
       //Serial.print(leds);
-      FastLED.setBrightness(250);
+      FastLED.setBrightness(50);
 
       FastLED.show();
     }
