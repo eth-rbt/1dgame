@@ -2,9 +2,9 @@
 #include "LedControl.h"
 #include <FastLED.h>
 
-#define NUM_LEDS1 6 // Number of LEDs
+#define NUM_LEDS1 12 // Number of LEDs
 #define DATA_PIN 3 // The pin your LEDs are connected to
-#define MAX_BRIGHTNESS 200  // Maximum brightness
+#define MAX_BRIGHTNESS 250  // Maximum brightness
 #define WAVE_PERIOD 5000 // Initial period of the sine wave in milliseconds
 #define SPEED_INCREASE 5 // How much to decrease the wave period by, to increase speed
 
