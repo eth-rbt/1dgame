@@ -31,7 +31,7 @@ void LedControl::updateColors(String input) {
         //Serial.print(colorIndices[i]);
         switch (colorIndices[i]) {
           case 0:
-            leds[i] = CRGB(71, 204, 45); //Cactus Green
+            leds[i] = CRGB(0, 255, 221); // Mint Blue 
             break;
           case 1:
             leds[i] = CRGB(225, 0, 110) //Flamingo Red;
@@ -49,7 +49,7 @@ void LedControl::updateColors(String input) {
             leds[i] = CRGB(250, 84, 7); // Sunset Orange
             break;
           case 6:
-            leds[i] = CRGB(0, 255, 221); // Mint Blue
+            leds[i] = CRGB(71, 204, 45); //Cactus Green
             break;
           case 7:
             leds[i] = CRGB(165, 42, 42); // Brown
