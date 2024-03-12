@@ -123,7 +123,7 @@ class Controller {
                 
                 if(noexplode){    
                     display.setAllPixels(color(255,0,0));  
-                    send(mess([1,1,1,1,1]));
+                    send(mess([8,8,8,8,8]));
                     send('explode');
                     noexplode=false;
                 }
@@ -135,7 +135,7 @@ class Controller {
                 if(nowin){
                     display.setAllPixels(color(0,255,0));  
 
-                    send(mess([0,0,0,0,0]));
+                    send(mess([9,9,9,9,9]));
                     send('win');
                     nowin=false;
                 }

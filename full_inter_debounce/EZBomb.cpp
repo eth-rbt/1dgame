@@ -4,8 +4,8 @@ EZBomb::EZBomb()
 {
     // Initialize arrays here if needed or in the setup function
     int tempButtonPins[numButtons] = {6, 5, 4, 3, 2};
-    char tempButtonChars[numButtons] = {'q', 'w', 'e', 'r', 't'};
-    //char tempButtonChars[numButtons] = {'y', 'u', 'i', 'o', 'p'};
+    //char tempButtonChars[numButtons] = {'q', 'w', 'e', 'r', 't'};
+    char tempButtonChars[numButtons] = {'y', 'u', 'i', 'o', 'p'};
     //unsigned long tempDebounceTime[numButtons] = {0,0,0,0,0};  // the last time the output pin was toggled
     
     memcpy(buttonPins, tempButtonPins, sizeof(tempButtonPins));

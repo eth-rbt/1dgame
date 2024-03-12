@@ -29,15 +29,16 @@ void LedControl::updateColors(String input) {
     if (index == numLeds) {
       for (int i = 0; i < numLeds; i++) {
         //Serial.print(colorIndices[i]);
+        leds[i].nscale8(200);;
         switch (colorIndices[i]) {
           case 0:
             leds[i] = CRGB(0, 255, 221); // Mint Blue 
             break;
           case 1:
-            leds[i] = CRGB(225, 0, 110) //Flamingo Red;
+            leds[i] = CRGB(225, 0, 110); //Flamingo Red;
             break;
           case 2:
-            leds[i] = CRGB(58, 134, 255) //Azure Blue;
+            leds[i] = CRGB(71, 204, 45); //Cactus Green
             break;
           case 3:
             leds[i] = CRGB(255, 190, 11); //Sunrise Yellow
@@ -49,16 +50,16 @@ void LedControl::updateColors(String input) {
             leds[i] = CRGB(250, 84, 7); // Sunset Orange
             break;
           case 6:
-            leds[i] = CRGB(71, 204, 45); //Cactus Green
+            leds[i] = CRGB(32, 57, 194); //Azure Blue;
             break;
           case 7:
             leds[i] = CRGB(165, 42, 42); // Brown
             break;
           case 8:
-            leds[i] = CRGB::Cyan;
+            leds[i] = CRGB::Red;
             break;
           case 9:
-            leds[i] = CRGB::Magenta;
+            leds[i] = CRGB::Green;
             break;
           case 10:
             leds[i] = CRGB::Black;
@@ -68,7 +69,6 @@ void LedControl::updateColors(String input) {
         }
       }
       //Serial.print(leds);
-      FastLED.setBrightness(50);
 
       FastLED.show();
     }

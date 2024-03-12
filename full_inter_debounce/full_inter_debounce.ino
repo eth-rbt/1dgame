@@ -4,7 +4,7 @@
 
 #define NUM_LEDS1 12 // Number of LEDs
 #define DATA_PIN 3 // The pin your LEDs are connected to
-#define MAX_BRIGHTNESS 250  // Maximum brightness
+#define MAX_BRIGHTNESS 10  // Maximum brightness
 #define WAVE_PERIOD 5000 // Initial period of the sine wave in milliseconds
 #define SPEED_INCREASE 5 // How much to decrease the wave period by, to increase speed
 
@@ -26,7 +26,7 @@ void setup() {
   ledControl.setup();
   Serial.begin(57600); // Start serial communication at 9600 baud
   FastLED.addLeds<APA102, 15, 14, BGR>(leds1, NUM_LEDS1); //D,C
-  FastLED.setBrightness(MAX_BRIGHTNESS);// Initialize the LED strip
+  //FastLED.setBrightness(MAX_BRIGHTNESS);// Initialize the LED strip
 }
 
 void loop() {
@@ -36,15 +36,18 @@ void loop() {
     //Serial.println(command);// Read the incoming command
     if (command == "mid"){
       ingame=false;
-      fill_solid(leds1, NUM_LEDS1, CRGB::Yellow);
+      fill_solid(leds1, NUM_LEDS1, CRGB(71, 204, 45));
+      scaleLED(100);
       FastLED.show();
     } else if (command == "win"){
       ingame=false;
-      fill_solid(leds1, NUM_LEDS1, CRGB::Green);
+      fill_solid(leds1, NUM_LEDS1, CRGB(71, 204, 45));
+      scaleLED(50);
       FastLED.show();
     } else if (command == "explode"){
       ingame=false;
       fill_solid(leds1, NUM_LEDS1, CRGB::Red);
+      scaleLED(50);
       FastLED.show();
     } else if (command == "start") {
       Serial.println('h');
@@ -57,6 +60,12 @@ void loop() {
   }
   if (ingame){
     updateLedEffect();
+  }
+}
+
+void scaleLED(int num){
+  for(int i = 0; i < NUM_LEDS1; i++) {
+    leds1[i].nscale8(num); // Scale brightness to 50%
   }
 }
 
@@ -80,6 +89,6 @@ void updateLedEffect() {
     // Sine wave is negative, turn LEDs off
     fill_solid(leds1, NUM_LEDS1, CRGB::Black);
   }
-
+  scaleLED(25);
   FastLED.show();
 }
